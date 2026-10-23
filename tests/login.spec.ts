@@ -10,7 +10,7 @@ test.describe('SCRUM-2: Admin Authentication @SCRUM-2', () => {
     await loginPage.navigate();
   });
 
-  test('TC-SCRUM-2-01: Successful Admin Authentication @P1 @smoke @regression', async ({ page, browserName }) => {
+  test('TC-SCRUM-2-01: Successful Admin Authentication @P1 @sanity @smoke @regression @story', async ({ page, browserName }) => {
     
     const { username, password } = TestData.validCredentials;
 
@@ -54,7 +54,7 @@ test.describe('SCRUM-2: Admin Authentication @SCRUM-2', () => {
     }));
 
   for (const data of invalidCredentials) {
-    test(`TC-SCRUM-2-02: Auth Failure - ${data.comment} @P1 @regression`, async ({ page }) => {
+    test(`TC-SCRUM-2-02: Auth Failure - ${data.comment} @P1 @regression @story @sanity`, async ({ page }) => {
       await loginPage.login(data.user, data.pass);
       await expect(page).toHaveURL(/.*login/);
       await expect(loginPage.errorMessage).toContainText('Invalid credentials');
@@ -69,7 +69,7 @@ test.describe('SCRUM-2: Admin Authentication @SCRUM-2', () => {
   }));
 
   for (const data of mandatoryFields) {
-    test(`TC-SCRUM-2-03: Mandatory Field - ${data.field} - ${data.user || 'empty'}/${data.pass || 'empty'} @P2 @regression`, async ({ page }) => {
+    test(`TC-SCRUM-2-03: Mandatory Field - ${data.field} - ${data.user || 'empty'}/${data.pass || 'empty'} @P2 @regression @sanity`, async ({ page }) => {
       await loginPage.login(data.user, data.pass);
       await expect(page).toHaveURL(/.*login/);
       // Use .first() to avoid strict mode violation when multiple 'Required' messages appear
@@ -91,7 +91,7 @@ test.describe('SCRUM-2: Admin Authentication @SCRUM-2', () => {
     });
   }
 
-  test('TC-SCRUM-2-04: System Error Handling (API 500) @P2 @regression', async ({ page }) => {
+  test('TC-SCRUM-2-04: System Error Handling (API 500) @P2 @regression @story @sanity', async ({ page }) => {
     // Mock the primary authentication endpoint to simulate a 500 server error
     
     await loginPage.page.route('**/index.php/auth/validate', async route => {
@@ -134,7 +134,7 @@ test.describe('SCRUM-2: Admin Authentication @SCRUM-2', () => {
 
   });
 
-  test('TC-SCRUM-2-05: Non-standard Format Input @P3 @regression', async ({ page }) => {
+  test('TC-SCRUM-2-05: Non-standard Format Input @P3 @regression @story @sanity', async ({ page }) => {
     // Testing that special characters don't crash the system
     const specialUser = 'admin_!@#$%^&*()';
     await loginPage.login(specialUser, 'any_password');
