@@ -1,0 +1,23 @@
+{
+  "name": "ai-automation-project",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "npx playwright test",
+    "test:story": "npx playwright test --grep"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "devDependencies": {
+    "@playwright/test": "^1.64.1",
+    "@types/node": "^26.6.5"
+  },
+  "dependencies": {
+    "@anthropic-ai/sdk": "^0.135.0",
+    "dotenv": "^18.0.8",
+    "typescript": "^7.0.2"
+  }
+}
