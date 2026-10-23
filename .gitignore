@@ -10,3 +10,5 @@ node_modules/
 # MCP - may contain credentials
 .mcp.json
 .env
+.DS_Store
+**/.DS_Store
