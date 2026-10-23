@@ -1,12 +1,36 @@
 import { defineConfig, devices } from '@playwright/test';
+import dotenv from 'dotenv';
 
-/**
- * Read environment variables from file.
- * https://github.com/motdotla/dotenv
- */
-// import dotenv from 'dotenv';
-// import path from 'path';
-// dotenv.config({ path: path.resolve(__dirname, '.env') });
+dotenv.config(); // Load .env before reading environment variables
+const targetEnv = process.env.TARGET_ENV;
+
+const baseURLByEnvironment: Record<string, string | undefined> = {
+  'QA': process.env.QA_BASE_URL,
+  'Staging': process.env.STAGING_BASE_URL,
+  'UAT': process.env.UAT_BASE_URL,
+};
+if (!targetEnv || !(targetEnv in baseURLByEnvironment)) {
+  throw new Error(
+    'TARGET_ENV must be QA, Staging, or UAT.'
+  );
+}
+const baseURL = baseURLByEnvironment[targetEnv];
+
+if (!baseURL) {
+  throw new Error(`Missing URL configuration for ${targetEnv}.`);
+}
+
+let parsedURL: URL;
+
+try {
+  parsedURL = new URL(baseURL);
+} catch {
+  throw new Error(`Invalid URL configured for ${targetEnv}.`);
+}
+
+if (parsedURL.protocol !== 'https:') {
+  throw new Error(`${targetEnv} must use an HTTPS URL.`);
+}
 
 /**
  * See https://playwright.dev/docs/test-configuration.
@@ -30,12 +54,13 @@ export default defineConfig({
   /* Shared settings for all the projects below. See https://playwright.dev/docs/api/class-testoptions. */
   use: {
     /* Base URL to use in actions like `await page.goto('')`. */
-    baseURL: 'https://opensource-demo.orangehrmlive.com',
+    baseURL: process.env.BASE_URL ||
+    'https://opensource-demo.orangehrmlive.com',
 
     /* Collect trace when retrying the failed test. See https://playwright.dev/docs/trace-viewer */
     trace: 'on-first-retry',
     // Capture evidence for debugging failed tests.
-    screenshot: 'on',
+    screenshot: 'only-on-failure',
     video: 'on',
   },
   outputDir: 'test-results/',
